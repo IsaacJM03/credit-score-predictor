@@ -1,1 +1,3 @@
 .venv
+*.joblib
+*.h5
