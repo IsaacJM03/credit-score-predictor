@@ -14,7 +14,7 @@ from sklearn.metrics import (classification_report, confusion_matrix,
 import pickle
 
 # ── Load Data ──────────────────────────────────────────────────────────────────
-df = pd.read_csv('files/data/comprehensive_loan_data.csv')
+df = pd.read_csv('data/comprehensive_loan_data.csv')
 print(f"Dataset shape: {df.shape}")
 
 # ── Feature Engineering ────────────────────────────────────────────────────────
