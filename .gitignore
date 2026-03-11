@@ -6,3 +6,6 @@ __pycache__/
 *.pyc
 *.pyo
 *.pt
+# Ignore pipeline outputs and model artefacts
+loan_ml_project/output/
+models/
