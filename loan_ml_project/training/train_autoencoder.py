@@ -7,7 +7,7 @@ persist the trained model.
 Usage
 -----
     python training/train_autoencoder.py \
-        --csv  ../comprehensive_loan_data.csv \
+        --csv  ../comprehensive_loan_data_45M.csv \
         --out  ../models/fraud_detection/autoencoder_weights.pt \
         --meta ../models/fraud_detection/autoencoder_meta.joblib
 
@@ -64,8 +64,8 @@ def parse_args():
     p = argparse.ArgumentParser(description="Train the fraud-detection autoencoder.")
     p.add_argument(
         "--csv",
-        default=os.path.join(os.path.dirname(__file__), "../../comprehensive_loan_data.csv"),
-        help="Path to comprehensive_loan_data.csv",
+        default=os.path.join(os.path.dirname(__file__), "../../comprehensive_loan_data_45M.csv"),
+        help="Path to comprehensive_loan_data_45M.csv",
     )
     p.add_argument(
         "--out",

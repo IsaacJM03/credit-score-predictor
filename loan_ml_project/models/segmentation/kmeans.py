@@ -31,6 +31,7 @@ Example cluster interpretations
   Cluster 3 – Irregular repayment patterns (potential fraud signal)
 """
 
+import time
 import numpy as np
 import pandas as pd
 from sklearn.cluster import KMeans
@@ -112,32 +113,51 @@ class KMeansSegmenter:
         X: np.ndarray,
         k_range: range = range(2, 11),
         random_state: int = 42,
+        sil_max_samples: int = 20_000,
     ) -> tuple:
         """
         Compute inertia for each K in *k_range*.
+
+        silhouette_score is capped at sil_max_samples rows to avoid the O(n²)
+        computation hanging on large datasets.
 
         Returns
         -------
         (inertias, sil_scores)  both lists of floats, one per K value
         """
+        # Use n_init=3 for the elbow sweep (speed); final fit uses n_init=10.
         inertias = []
         sil_scores = []
+        rng = np.random.default_rng(random_state)
+        # Subsample once for silhouette so every K is comparable
+        if len(X) > sil_max_samples:
+            sil_idx = rng.choice(len(X), sil_max_samples, replace=False)
+            X_sil = X[sil_idx]
+        else:
+            X_sil = X
         for k in k_range:
-            km = KMeans(n_clusters=k, random_state=random_state, n_init=10)
+            t0 = time.time()
+            km = KMeans(n_clusters=k, random_state=random_state, n_init=3,
+                        max_iter=100)
             labels = km.fit_predict(X)
+            elapsed = time.time() - t0
+            sil_labels = labels[sil_idx] if len(X) > sil_max_samples else labels
+            sil = silhouette_score(X_sil, sil_labels) if k > 1 else 0.0
             inertias.append(km.inertia_)
-            sil = silhouette_score(X, labels) if k > 1 else 0.0
             sil_scores.append(sil)
-            print(f"  K={k:2d} | inertia={km.inertia_:,.1f} | silhouette={sil:.4f}")
+            print(f"  K={k:2d} | inertia={km.inertia_:,.1f} | "
+                  f"silhouette={sil:.4f} | {elapsed:.1f}s")
         return inertias, sil_scores
 
     # ------------------------------------------------------------------
     # Evaluation
     # ------------------------------------------------------------------
 
-    def evaluate(self, X: np.ndarray) -> dict:
+    def evaluate(self, X: np.ndarray, sil_max_samples: int = 20_000) -> dict:
         """
         Compute clustering quality metrics.
+
+        silhouette_score is O(n²) so it is capped at sil_max_samples rows.
 
         Returns
         -------
@@ -145,9 +165,16 @@ class KMeansSegmenter:
         """
         self._check_fitted()
         labels = self.model.labels_
+        if len(X) > sil_max_samples:
+            rng = np.random.default_rng(42)
+            idx = rng.choice(len(X), sil_max_samples, replace=False)
+            sil = silhouette_score(X[idx], labels[idx])
+            print(f"  [KMeans] silhouette computed on {sil_max_samples:,}-sample subset.")
+        else:
+            sil = silhouette_score(X, labels)
         metrics = {
-            "inertia":            self.model.inertia_,
-            "silhouette_score":   silhouette_score(X, labels),
+            "inertia":              self.model.inertia_,
+            "silhouette_score":     sil,
             "davies_bouldin_score": davies_bouldin_score(X, labels),
         }
         print("\n[KMeans] Clustering quality metrics:")

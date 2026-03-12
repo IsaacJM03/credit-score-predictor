@@ -9,3 +9,4 @@ __pycache__/
 # Ignore pipeline outputs and model artefacts
 loan_ml_project/output/
 models/
+comprehensive_loan_data_45M.csv

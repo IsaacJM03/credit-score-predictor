@@ -13,7 +13,7 @@ from sklearn.preprocessing import StandardScaler, LabelEncoder
 
 
 # ---------------------------------------------------------------------------
-# Column name constants (matches comprehensive_loan_data.csv)
+# Column name constants (matches comprehensive_loan_data_45M.csv)
 # ---------------------------------------------------------------------------
 CAT_COLS = ["Employment_Status", "Payment_History"]
 NUM_COLS = [
@@ -38,7 +38,7 @@ def load_data(csv_path: str) -> pd.DataFrame:
     Parameters
     ----------
     csv_path : str
-        Path to comprehensive_loan_data.csv (or any compatible CSV).
+        Path to comprehensive_loan_data_45M.csv (or any compatible CSV).
 
     Returns
     -------

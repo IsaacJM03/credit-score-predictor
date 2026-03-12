@@ -22,7 +22,7 @@ from sklearn.metrics import roc_auc_score
 
 RANDOM_STATE = 42
 MODELS_DIR = 'models'
-CSV_PATH = 'comprehensive_loan_data.csv'
+CSV_PATH = 'comprehensive_loan_data_45M.csv'
 
 os.makedirs(MODELS_DIR, exist_ok=True)
 

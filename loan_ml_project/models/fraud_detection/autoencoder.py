@@ -156,12 +156,21 @@ class AutoencoderDetector:
         input_dim: int,
         latent_dim: int = 8,
         lr: float = 1e-3,
-        batch_size: int = 64,
+        batch_size: int = 2048,
         epochs: int = 50,
         patience: int = 10,
         device: str | None = None,
+        max_train_samples: int | None = None,
     ):
-        self.device = device or ("cuda" if torch.cuda.is_available() else "cpu")
+        if device is not None:
+            self.device = device
+        elif torch.backends.mps.is_available():
+            self.device = "mps"      # Apple Silicon GPU
+        elif torch.cuda.is_available():
+            self.device = "cuda"
+        else:
+            self.device = "cpu"
+        self.max_train_samples = max_train_samples
         self.model = Autoencoder(input_dim=input_dim, latent_dim=latent_dim).to(self.device)
         self.lr = lr
         self.batch_size = batch_size
@@ -203,14 +212,35 @@ class AutoencoderDetector:
         -------
         dict  training history {'train_loss': [...], 'val_loss': [...]}
         """
+        # Optionally subsample to keep epoch time manageable on large datasets
+        if self.max_train_samples and len(X_train) > self.max_train_samples:
+            rng = np.random.default_rng(0)
+            idx = rng.choice(len(X_train), self.max_train_samples, replace=False)
+            X_train = X_train[idx]
+            print(f"[Autoencoder] Subsampled to {self.max_train_samples:,} rows for training.")
+
         print(f"[Autoencoder] Training on {X_train.shape[0]:,} samples, "
               f"device={self.device} …")
 
+        # MPS doesn't benefit from multi-process data loading; CPU benefits from 2 workers
+        nw = 0 if self.device == "mps" else 2
         train_loader = DataLoader(
-            LoanDataset(X_train), batch_size=self.batch_size, shuffle=True,
+            LoanDataset(X_train),
+            batch_size=self.batch_size,
+            shuffle=True,
+            num_workers=nw,
+            pin_memory=(self.device == "cuda"),
+            persistent_workers=(nw > 0),
         )
         val_loader = (
-            DataLoader(LoanDataset(X_val), batch_size=self.batch_size, shuffle=False)
+            DataLoader(
+                LoanDataset(X_val),
+                batch_size=self.batch_size * 2,
+                shuffle=False,
+                num_workers=nw,
+                pin_memory=(self.device == "cuda"),
+                persistent_workers=(nw > 0),
+            )
             if X_val is not None else None
         )
 
