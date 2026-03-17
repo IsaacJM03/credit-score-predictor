@@ -6,6 +6,6 @@ __pycache__/
 *.pyc
 *.pyo
 *.pt
-# Ignore pipeline outputs and model artefacts
+# Ignore pipeline outputs and model artefacts (root-level artifact directory only)
 loan_ml_project/output/
-models/
+/models/
