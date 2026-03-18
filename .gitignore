@@ -1,7 +1,7 @@
 .venv
-*.joblib
-*.h5
-*.pkl
+# *.joblib
+ *.h5
+# *.pkl
 __pycache__/
 *.pyc
 *.pyo
@@ -9,3 +9,5 @@ __pycache__/
 # Ignore pipeline outputs and model artefacts (root-level artifact directory only)
 loan_ml_project/output/
 /models/
+comprehensive_loan_data_45M.csv
+comprehensive_loan_data_5m.csv

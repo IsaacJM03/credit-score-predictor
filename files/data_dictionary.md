@@ -1,8 +1,8 @@
 # Data Dictionary
-## comprehensive_loan_data.csv
+## comprehensive_loan_data_5m.csv
 
 **Project:** Credit Score Predictor  
-**Path:** `/Users/mac/Documents/GitHub/Projects/credit-score-predictor/comprehensive_loan_data.csv`  
+**Path:** `/Users/mac/Documents/GitHub/Projects/credit-score-predictor/comprehensive_loan_data_5m.csv`  
 **Last updated:** [DD Month YYYY]  
 **Records:** [N] rows × [M] columns  
 
@@ -49,7 +49,7 @@
 
 ```python
 import pandas as pd
-df = pd.read_csv('data/comprehensive_loan_data.csv')
+df = pd.read_csv('data/comprehensive_loan_data_5m.csv')
 print(df.dtypes)
 print(df.isnull().sum())
 print(df.describe())

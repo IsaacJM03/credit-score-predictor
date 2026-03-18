@@ -37,7 +37,7 @@
 ```
 Prompt 1 (Section: Introduction, Tool: Claude):
 "Write a first paragraph for the Introduction of an IEEE Access paper on credit score 
-prediction using machine learning, referencing a dataset called comprehensive_loan_data.csv 
+prediction using machine learning, referencing a dataset called comprehensive_loan_data_5m.csv 
 and 25 EDA visualizations."
 
 Prompt 2 (Section: Related Work, Tool: Claude):

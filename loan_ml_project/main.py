@@ -10,7 +10,7 @@ visualisation outputs.
 Usage
 -----
     # From inside loan_ml_project/
-    python main.py --csv ../comprehensive_loan_data.csv --out-dir ../output
+    python main.py --csv ../comprehensive_loan_data_5m.csv --out-dir ../output
 
     # Or from the repository root
     python loan_ml_project/main.py
@@ -19,7 +19,7 @@ Project Folder Structure
 -------------------------
 loan_ml_project/
 ├── data/
-│   ├── raw/           (place comprehensive_loan_data.csv here for portability)
+│   ├── raw/           (place comprehensive_loan_data_5m.csv here for portability)
 │   └── processed/     (pipeline writes scaled numpy arrays here)
 ├── notebooks/         (Jupyter exploration notebooks)
 ├── models/
@@ -102,8 +102,8 @@ def parse_args():
     )
     p.add_argument(
         "--csv",
-        default=os.path.join(_THIS_DIR, "../comprehensive_loan_data.csv"),
-        help="Path to comprehensive_loan_data.csv",
+        default=os.path.join(_THIS_DIR, "../comprehensive_loan_data_5m.csv"),
+        help="Path to comprehensive_loan_data_5m.csv",
     )
     p.add_argument(
         "--out-dir",
@@ -119,7 +119,7 @@ def parse_args():
         help="Expected fraction of anomalies (Isolation Forest / One-Class SVM nu)",
     )
     p.add_argument(
-        "--ae-epochs", type=int, default=30,
+        "--ae-epochs", type=int, default=10,
         help="Autoencoder training epochs",
     )
     p.add_argument(
@@ -293,6 +293,7 @@ def run_segmentation(
     """
     seg_dir = os.path.join(out_dir, "segmentation")
     os.makedirs(seg_dir, exist_ok=True)
+    rng = np.random.default_rng(RANDOM_STATE)
 
     print("\n" + "="*60)
     print("  SYSTEM 2: BORROWER SEGMENTATION")
@@ -319,12 +320,23 @@ def run_segmentation(
     kmeans.cluster_profiles(X_scaled, feature_names)
     kmeans.save(os.path.join(seg_dir, "kmeans.joblib"))
 
-    fig = plot_pca_clusters(X_scaled, km_labels, title="K-Means Clusters (PCA)")
+    # Visuals/profiles on full 5M rows can be prohibitively expensive.
+    max_kmeans_viz = 100_000
+    if len(X_scaled) > max_kmeans_viz:
+        viz_idx = rng.choice(len(X_scaled), max_kmeans_viz, replace=False)
+        X_km_viz = X_scaled[viz_idx]
+        km_labels_viz = km_labels[viz_idx]
+        print(f"[main] K-Means visualisation sample: {max_kmeans_viz:,} / {len(X_scaled):,}")
+    else:
+        X_km_viz = X_scaled
+        km_labels_viz = km_labels
+
+    fig = plot_pca_clusters(X_km_viz, km_labels_viz, title="K-Means Clusters (PCA)")
     fig.savefig(os.path.join(seg_dir, "kmeans_pca.png"), dpi=150)
     plt.close(fig)
 
-    df_km = pd.DataFrame(X_scaled, columns=feature_names)
-    df_km["Cluster"] = km_labels
+    df_km = pd.DataFrame(X_km_viz, columns=feature_names)
+    df_km["Cluster"] = km_labels_viz
     fig = plot_cluster_heatmap(df_km, feature_names, title="K-Means Cluster Heatmap")
     fig.savefig(os.path.join(seg_dir, "kmeans_heatmap.png"), dpi=150)
     plt.close(fig)
@@ -333,15 +345,24 @@ def run_segmentation(
 
     # ---- 2b. DBSCAN ----
     print("\n--- DBSCAN ---")
-    suggested_eps = DBSCANSegmenter.suggest_eps(X_scaled)
+    # DBSCAN is very expensive at this scale; fit on a representative sample.
+    max_dbscan_train = 120_000
+    if len(X_scaled) > max_dbscan_train:
+        db_idx = rng.choice(len(X_scaled), max_dbscan_train, replace=False)
+        X_db = X_scaled[db_idx]
+        print(f"[main] DBSCAN training sample: {max_dbscan_train:,} / {len(X_scaled):,}")
+    else:
+        X_db = X_scaled
+
+    suggested_eps = DBSCANSegmenter.suggest_eps(X_db)
     dbscan = DBSCANSegmenter(eps=suggested_eps, min_samples=10)
-    dbscan.fit(X_scaled)
+    dbscan.fit(X_db)
     db_labels = dbscan.labels()
-    dbscan.evaluate(X_scaled)
-    dbscan.cluster_profiles(X_scaled, feature_names, include_noise=False)
+    dbscan.evaluate(X_db)
+    dbscan.cluster_profiles(X_db, feature_names, include_noise=False)
     dbscan.save(os.path.join(seg_dir, "dbscan.joblib"))
 
-    fig = plot_pca_clusters(X_scaled, db_labels, title="DBSCAN Clusters (PCA)")
+    fig = plot_pca_clusters(X_db, db_labels, title="DBSCAN Clusters (PCA)")
     fig.savefig(os.path.join(seg_dir, "dbscan_pca.png"), dpi=150)
     plt.close(fig)
 

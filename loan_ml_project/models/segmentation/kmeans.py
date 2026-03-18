@@ -33,7 +33,7 @@ Example cluster interpretations
 
 import numpy as np
 import pandas as pd
-from sklearn.cluster import KMeans
+from sklearn.cluster import KMeans, MiniBatchKMeans
 from sklearn.metrics import silhouette_score, davies_bouldin_score
 import joblib
 
@@ -59,12 +59,11 @@ class KMeansSegmenter:
         n_init: int = 10,
     ):
         self.n_clusters = n_clusters
-        self.model = KMeans(
-            n_clusters=n_clusters,
-            random_state=random_state,
-            max_iter=max_iter,
-            n_init=n_init,
-        )
+        self.max_iter = max_iter
+        self.n_init = n_init
+        self.random_state = random_state
+        # model will be selected lazily in .fit() (KMeans or MiniBatchKMeans)
+        self.model = None
         self._is_fitted = False
 
     # ------------------------------------------------------------------
@@ -83,8 +82,28 @@ class KMeansSegmenter:
         ----------
         X : np.ndarray  shape (n_samples, n_features)
         """
-        print(f"[KMeans] Fitting with K={self.n_clusters} on "
-              f"{X.shape[0]:,} samples …")
+        n_samples = X.shape[0]
+        print(f"[KMeans] Fitting with K={self.n_clusters} on {n_samples:,} samples …")
+
+        # For large datasets, prefer MiniBatchKMeans for speed and memory
+        mini_batch_threshold = 50_000
+        if n_samples > mini_batch_threshold:
+            print(f"[KMeans] Large dataset detected (> {mini_batch_threshold:,}); using MiniBatchKMeans.")
+            self.model = MiniBatchKMeans(
+                n_clusters=self.n_clusters,
+                random_state=self.random_state,
+                max_iter=max(10, int(self.max_iter / 3)),
+                batch_size=4096,
+                n_init=max(1, int(self.n_init / 3)),
+            )
+        else:
+            self.model = KMeans(
+                n_clusters=self.n_clusters,
+                random_state=self.random_state,
+                max_iter=self.max_iter,
+                n_init=self.n_init,
+            )
+
         self.model.fit(X)
         self._is_fitted = True
         print(f"[KMeans] Inertia (WCSS): {self.model.inertia_:.2f}")
@@ -120,13 +139,25 @@ class KMeansSegmenter:
         -------
         (inertias, sil_scores)  both lists of floats, one per K value
         """
+        # For large X, compute elbow/silhouette on a representative subsample
+        n_samples = X.shape[0]
+        sample_size = 10_000
+        if n_samples > sample_size:
+            rng = np.random.default_rng(random_state)
+            idx = rng.choice(n_samples, sample_size, replace=False)
+            X_sample = X[idx]
+            print(f"[KMeans] Using subsample of {sample_size:,} for elbow analysis (from {n_samples:,} samples)")
+        else:
+            X_sample = X
+
         inertias = []
         sil_scores = []
         for k in k_range:
-            km = KMeans(n_clusters=k, random_state=random_state, n_init=10)
-            labels = km.fit_predict(X)
+            # use MiniBatchKMeans on the sample for speed
+            km = MiniBatchKMeans(n_clusters=k, random_state=random_state, n_init=3, batch_size=1024, max_iter=100)
+            labels = km.fit_predict(X_sample)
             inertias.append(km.inertia_)
-            sil = silhouette_score(X, labels) if k > 1 else 0.0
+            sil = silhouette_score(X_sample, labels) if k > 1 else 0.0
             sil_scores.append(sil)
             print(f"  K={k:2d} | inertia={km.inertia_:,.1f} | silhouette={sil:.4f}")
         return inertias, sil_scores
@@ -145,10 +176,21 @@ class KMeansSegmenter:
         """
         self._check_fitted()
         labels = self.model.labels_
+        max_eval_samples = 50_000
+        if len(X) > max_eval_samples:
+            rng = np.random.default_rng(self.random_state)
+            idx = rng.choice(len(X), max_eval_samples, replace=False)
+            X_eval = X[idx]
+            labels_eval = labels[idx]
+            print(f"[KMeans] Evaluating on sample of {max_eval_samples:,} (from {len(X):,})")
+        else:
+            X_eval = X
+            labels_eval = labels
+
         metrics = {
             "inertia":            self.model.inertia_,
-            "silhouette_score":   silhouette_score(X, labels),
-            "davies_bouldin_score": davies_bouldin_score(X, labels),
+            "silhouette_score":   silhouette_score(X_eval, labels_eval),
+            "davies_bouldin_score": davies_bouldin_score(X_eval, labels_eval),
         }
         print("\n[KMeans] Clustering quality metrics:")
         for k, v in metrics.items():
@@ -168,8 +210,19 @@ class KMeansSegmenter:
         """
         self._check_fitted()
         labels = self.model.labels_
-        df = pd.DataFrame(X, columns=feature_names)
-        df["Cluster"] = labels
+        max_profile_samples = 200_000
+        if len(X) > max_profile_samples:
+            rng = np.random.default_rng(self.random_state)
+            idx = rng.choice(len(X), max_profile_samples, replace=False)
+            X_profile = X[idx]
+            labels_profile = labels[idx]
+            print(f"[KMeans] Computing cluster profiles on sample of {max_profile_samples:,} (from {len(X):,})")
+        else:
+            X_profile = X
+            labels_profile = labels
+
+        df = pd.DataFrame(X_profile, columns=feature_names)
+        df["Cluster"] = labels_profile
         profile = df.groupby("Cluster").mean()
         print("\n[KMeans] Cluster profiles (mean feature values):")
         print(profile.to_string())

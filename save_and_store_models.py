@@ -3,7 +3,7 @@ save_and_store_models.py
 ------------------------
 Train and persist all loan-analytics models to the ``models/`` directory.
 
-Two systems are built from ``comprehensive_loan_data.csv``:
+Two systems are built from ``comprehensive_loan_data_5m.csv``:
 
 System 1 – Fraud Detection
     Isolation Forest      → models/fraud_detection/isolation_forest.joblib
@@ -26,7 +26,7 @@ Usage
     python save_and_store_models.py
 
     # Override defaults:
-    python save_and_store_models.py --csv comprehensive_loan_data.csv \\
+    python save_and_store_models.py --csv comprehensive_loan_data_5m.csv \\
                                     --models-dir models \\
                                     --n-clusters 4 \\
                                     --skip-ae
@@ -73,8 +73,8 @@ def _parse_args():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument(
         "--csv",
-        default=os.path.join(_REPO_ROOT, "comprehensive_loan_data.csv"),
-        help="Path to the loan dataset CSV (default: comprehensive_loan_data.csv)",
+        default=os.path.join(_REPO_ROOT, "comprehensive_loan_data_5m.csv"),
+        help="Path to the loan dataset CSV (default: comprehensive_loan_data_5m.csv)",
     )
     p.add_argument(
         "--models-dir",
