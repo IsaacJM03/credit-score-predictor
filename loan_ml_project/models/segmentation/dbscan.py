@@ -128,43 +128,44 @@ class DBSCANSegmenter:
     def suggest_eps(
         X: np.ndarray,
         k: int | None = None,
-        percentile: float = 90.0,
+        percentile: float = 50.0,
+        max_samples: int = 20_000,
+        eps_cap: float = 1.0,
     ) -> float:
         """
         Suggest an eps value based on the k-NN distance distribution.
 
-        The 'knee' of the sorted k-NN distances is a common eps heuristic.
-        This function returns the *percentile* of those distances as a
-        conservative starting point.
-
-        Parameters
-        ----------
-        X          : scaled feature matrix
-        k          : number of neighbours (default: 2 * n_features)
-        percentile : which percentile of distances to return
-
-        Returns
-        -------
-        float  – suggested eps value
+        Uses the median (50th percentile) of k-NN distances by default –
+        tighter than the 90th percentile to avoid massive neighbourhoods in
+        high-dimensional standardised space.
+        Hard-caps eps at eps_cap (default 1.0) to prevent DBSCAN from
+        building a single giant cluster that exhausts memory.
+        Subsamples to max_samples rows for speed.
         """
         if k is None:
             k = max(2 * X.shape[1], 5)
+        if len(X) > max_samples:
+            rng = np.random.default_rng(42)
+            X = X[rng.choice(len(X), max_samples, replace=False)]
+            print(f"[DBSCAN] suggest_eps using {max_samples:,}-row subsample.")
         nbrs = NearestNeighbors(n_neighbors=k).fit(X)
         distances, _ = nbrs.kneighbors(X)
         kth_distances = np.sort(distances[:, -1])
         suggested = float(np.percentile(kth_distances, percentile))
+        suggested = min(suggested, eps_cap)
         print(f"[DBSCAN] Suggested eps ({percentile}th percentile of "
-              f"{k}-NN distances): {suggested:.4f}")
+              f"{k}-NN distances, capped at {eps_cap}): {suggested:.4f}")
         return suggested
 
     # ------------------------------------------------------------------
     # Evaluation
     # ------------------------------------------------------------------
 
-    def evaluate(self, X: np.ndarray) -> dict:
+    def evaluate(self, X: np.ndarray, sil_max_samples: int = 20_000) -> dict:
         """
         Compute silhouette and Davies-Bouldin scores on non-noise points.
 
+        silhouette_score is capped at sil_max_samples to avoid an O(n²) hang.
         These metrics require at least 2 clusters; if DBSCAN finds fewer,
         they are set to NaN.
         """
@@ -175,7 +176,13 @@ class DBSCANSegmenter:
         n_clusters = len(set(labels_clean))
 
         if n_clusters >= 2 and len(X_clean) > n_clusters:
-            sil = silhouette_score(X_clean, labels_clean)
+            if len(X_clean) > sil_max_samples:
+                rng = np.random.default_rng(42)
+                idx = rng.choice(len(X_clean), sil_max_samples, replace=False)
+                sil = silhouette_score(X_clean[idx], labels_clean[idx])
+                print(f"  [DBSCAN] silhouette computed on {sil_max_samples:,}-sample subset.")
+            else:
+                sil = silhouette_score(X_clean, labels_clean)
             db  = davies_bouldin_score(X_clean, labels_clean)
         else:
             sil = float("nan")

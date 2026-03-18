@@ -18,7 +18,7 @@ Use this checklist to confirm the notebook is submission-ready before exporting.
   ```python
   # ============================================================
   # PROJECT: Credit Score Prediction – EDA & Model Pipeline
-  # DATASET: data/comprehensive_loan_data_5m.csv
+  # DATASET: data/comprehensive_loan_data_45M.csv
   # NOTEBOOK: eda_visualizations.ipynb
   # AUTHORS: [Author Names]
   # INSTITUTION: [Your Institution]
@@ -41,7 +41,7 @@ Use this checklist to confirm the notebook is submission-ready before exporting.
   Use relative path. Set and display random seed.
   ```python
   RANDOM_STATE = 42
-  DATA_PATH = "data/comprehensive_loan_data_5m.csv"
+  DATA_PATH = "data/comprehensive_loan_data_45M.csv"
   df = pd.read_csv(DATA_PATH)
   print(f"Loaded: {df.shape[0]:,} rows × {df.shape[1]} columns")
   df.head()
@@ -127,7 +127,7 @@ Times New Roman 10pt) describing the credit score prediction study. It includes:
 Dataset, Methodology, Exploratory Data Analysis, Results, Discussion, Conclusion, Future 
 Work, References in IEEE citation format), and an appendix with the data dictionary and 
 repository link. The paper documents 25 EDA visualizations from eda_visualizations.ipynb 
-applied to comprehensive_loan_data_5m.csv.
+applied to comprehensive_loan_data_45M.csv.
 File: Paper_Writeup_IEEE.docx
 ```
 
@@ -166,7 +166,7 @@ File: AI_Content_Evaluation.pdf
 ```
 This PowerPoint deck (12 slides) presents the credit score prediction project for academic 
 review. It covers: project objectives, dataset overview ([N] records, [M] features from 
-comprehensive_loan_data_5m.csv), preprocessing pipeline, 10–12 high-impact EDA visualizations 
+comprehensive_loan_data_45M.csv), preprocessing pipeline, 10–12 high-impact EDA visualizations 
 from the 25 generated in eda_visualizations.ipynb (with embedded captions and speaker 
 notes), key findings (class imbalance, top predictive features, distributional insights), 
 model results table, and step-by-step reproducibility instructions. An executive summary 

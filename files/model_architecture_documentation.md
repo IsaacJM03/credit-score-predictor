@@ -2,7 +2,7 @@
 ## Credit Score Predictor — Assignment Submission
 
 **Course Assignment** | Deadline: Saturday 14 March 2026, 10:00 AM  
-**Dataset:** `comprehensive_loan_data_5m.csv` (N=400 records, 10 columns)  
+**Dataset:** `comprehensive_loan_data_45M.csv` (N=400 records, 10 columns)  
 **Task:** Binary Classification — `Repayment_Status` (0 = Default, 1 = Repaid)
 
 ---

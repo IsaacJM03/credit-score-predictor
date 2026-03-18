@@ -19,7 +19,7 @@
 ```
 credit-score-predictor/
 ├── data/
-│   └── comprehensive_loan_data_5m.csv        # Raw dataset — do not modify
+│   └── comprehensive_loan_data_45M.csv        # Raw dataset — do not modify
 ├── eda_visualizations.ipynb               # Main notebook (25 visualizations + model)
 ├── figures/                               # Exported PNG figures
 │   ├── viz_01_loan_amount_hist.png
@@ -95,7 +95,7 @@ cd credit-score-predictor
 pip install -r requirements.txt
 
 # 3. Verify dataset path
-# Dataset must be at: data/comprehensive_loan_data_5m.csv
+# Dataset must be at: data/comprehensive_loan_data_45M.csv
 
 # 4. Open and run notebook
 jupyter notebook eda_visualizations.ipynb
