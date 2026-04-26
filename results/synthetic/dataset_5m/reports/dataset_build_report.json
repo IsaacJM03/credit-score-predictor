@@ -1,0 +1,22 @@
+{
+  "mode": "auto",
+  "generated_rows": 19101258,
+  "accepted_rows": 5000000,
+  "repaired_values": 2052625,
+  "hard_rejects": 0,
+  "soft_score_mean": 0.8658550996027238,
+  "requested_rows": 5000000,
+  "output_csv_path": "results/synthetic/dataset_5m/synthetic_dataset_5000000.csv",
+  "output_parquet_path": "results/synthetic/dataset_5m/synthetic_dataset_5000000.parquet",
+  "parquet_written": false,
+  "parquet_skip_reason": "No parquet engine found. Install 'pyarrow' or 'fastparquet'.",
+  "cache_path": "models/synthetic/checkpoints/tabular_agent_5000000.pt",
+  "sample_preview_path": "results/synthetic/dataset_5m/samples/synthetic_dataset_head.csv",
+  "visualizations": [
+    "results/synthetic/dataset_5m/visualizations/dist_monthly_income.png",
+    "results/synthetic/dataset_5m/visualizations/dist_credit_score.png",
+    "results/synthetic/dataset_5m/visualizations/dist_debt_to_income_ratio.png",
+    "results/synthetic/dataset_5m/visualizations/target_rate.png"
+  ],
+  "chunk_rows": 250000
+}

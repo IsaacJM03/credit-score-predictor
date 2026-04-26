@@ -1,0 +1,17 @@
+{
+  "mode": "gan",
+  "generated_rows": 10000,
+  "accepted_rows": 2000,
+  "repaired_values": 0,
+  "hard_rejects": 0,
+  "soft_score_mean": 0.6881193230872136,
+  "requested_rows": 2000,
+  "cache_path": "models/synthetic/checkpoints/smoke.pt",
+  "sample_preview_path": "results/synthetic/smoke_2000/samples/synthetic_sample_head.csv",
+  "visualizations": [
+    "results/synthetic/smoke_2000/visualizations/dist_monthly_income.png",
+    "results/synthetic/smoke_2000/visualizations/dist_credit_score.png",
+    "results/synthetic/smoke_2000/visualizations/dist_debt_to_income_ratio.png",
+    "results/synthetic/smoke_2000/visualizations/target_rate.png"
+  ]
+}

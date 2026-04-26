@@ -1,0 +1,17 @@
+{
+  "mode": "auto",
+  "generated_rows": 100000,
+  "accepted_rows": 2000,
+  "repaired_values": 26984,
+  "hard_rejects": 0,
+  "soft_score_mean": 0.882673888997944,
+  "requested_rows": 2000,
+  "output_csv_path": "results/synthetic/smoke_cli_2000_v2/synthetic_2000.csv",
+  "output_parquet_path": "results/synthetic/smoke_cli_2000_v2/synthetic_2000.parquet",
+  "parquet_written": false,
+  "parquet_skip_reason": "No parquet engine found. Install 'pyarrow' or 'fastparquet'.",
+  "cache_path": "models/synthetic/checkpoints/tabular_agent_2000.pt",
+  "sample_preview_path": "results/synthetic/smoke_cli_2000_v2/samples/synthetic_dataset_head.csv",
+  "visualizations": [],
+  "chunk_rows": 500
+}

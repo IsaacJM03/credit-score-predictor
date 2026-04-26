@@ -1,4 +1,9 @@
 .venv
+__pycache__/
 *.joblib
 *.h5
 *.pkl
+models/synthetic/
+.DS_Store
+*.csv
+*.png
