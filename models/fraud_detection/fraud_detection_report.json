@@ -1,0 +1,72 @@
+{
+  "dataset_path": "/Users/mac/Documents/credit-score-predictor/results/synthetic/dataset_5m/synthetic_dataset_5000000.csv",
+  "feature_count": 13,
+  "features": [
+    "Age",
+    "Monthly_Income",
+    "Credit_Score",
+    "Loan_Amount_Requested",
+    "Existing_Debts",
+    "Num_Previous_Loans",
+    "Payment_History_Encoded",
+    "Employment_Status_Encoded",
+    "Debt_to_Income_Ratio",
+    "Loan_to_Income_Ratio",
+    "Repayment_Consistency",
+    "Application_Velocity",
+    "Credit_Utilization_Score"
+  ],
+  "artifacts": [
+    {
+      "name": "scaler",
+      "path": "models/fraud_detection/scaler.pkl",
+      "kind": "preprocessor"
+    },
+    {
+      "name": "isolation_forest",
+      "path": "models/fraud_detection/isolation_forest.pkl",
+      "kind": "model"
+    },
+    {
+      "name": "one_class_svm",
+      "path": "models/fraud_detection/one_class_svm.pkl",
+      "kind": "model"
+    },
+    {
+      "name": "autoencoder",
+      "path": "models/fraud_detection/autoencoder_state.pt",
+      "kind": "model"
+    }
+  ],
+  "metrics": {
+    "isolation_forest": {
+      "score_mean": 0.4508293940625909,
+      "score_std": 0.04124934743009236,
+      "threshold_95": 0.5311425235654216
+    },
+    "one_class_svm": {
+      "score_mean": -193.96018125144306,
+      "score_std": 123.24407161683048,
+      "threshold_95": -7.627942810591314e-05
+    },
+    "autoencoder": {
+      "reconstruction_error_mean": 0.14770293328029324,
+      "reconstruction_error_std": 18.933947729113104,
+      "threshold_95": 0.17416897237800663
+    }
+  },
+  "visualization_dir": "/Users/mac/Documents/credit-score-predictor/models/fraud_detection/visualizations",
+  "visualizations": {
+    "anomaly_pca_projection": "/Users/mac/Documents/credit-score-predictor/models/fraud_detection/visualizations/anomaly_pca_projection.png",
+    "iforest_score_distribution": "/Users/mac/Documents/credit-score-predictor/models/fraud_detection/visualizations/iforest_score_distribution.png",
+    "ocsvm_score_distribution": "/Users/mac/Documents/credit-score-predictor/models/fraud_detection/visualizations/ocsvm_score_distribution.png",
+    "autoencoder_reconstruction_error": "/Users/mac/Documents/credit-score-predictor/models/fraud_detection/visualizations/autoencoder_reconstruction_error.png",
+    "autoencoder_error_percentile_curve": "/Users/mac/Documents/credit-score-predictor/models/fraud_detection/visualizations/autoencoder_error_percentile_curve.png",
+    "autoencoder_ranked_reconstruction_error": "/Users/mac/Documents/credit-score-predictor/models/fraud_detection/visualizations/autoencoder_ranked_reconstruction_error.png",
+    "autoencoder_top_feature_reconstruction_error": "/Users/mac/Documents/credit-score-predictor/models/fraud_detection/visualizations/autoencoder_top_feature_reconstruction_error.png",
+    "autoencoder_pca_anomaly_overlay": "/Users/mac/Documents/credit-score-predictor/models/fraud_detection/visualizations/autoencoder_pca_anomaly_overlay.png",
+    "autoencoder_training_loss": "/Users/mac/Documents/credit-score-predictor/models/fraud_detection/visualizations/autoencoder_training_loss.png",
+    "iforest_vs_autoencoder_score_scatter": "/Users/mac/Documents/credit-score-predictor/models/fraud_detection/visualizations/iforest_vs_autoencoder_score_scatter.png",
+    "anomaly_rate_comparison": "/Users/mac/Documents/credit-score-predictor/models/fraud_detection/visualizations/anomaly_rate_comparison.png"
+  }
+}

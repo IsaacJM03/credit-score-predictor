@@ -1,0 +1,50 @@
+{
+  "dataset_path": "results/synthetic/smoke_cli_2000_v2/synthetic_2000.csv",
+  "feature_count": 13,
+  "features": [
+    "Age",
+    "Monthly_Income",
+    "Credit_Score",
+    "Loan_Amount_Requested",
+    "Existing_Debts",
+    "Num_Previous_Loans",
+    "Payment_History_Encoded",
+    "Employment_Status_Encoded",
+    "Debt_to_Income_Ratio",
+    "Loan_to_Income_Ratio",
+    "Repayment_Consistency",
+    "Application_Velocity",
+    "Credit_Utilization_Score"
+  ],
+  "artifacts": [
+    {
+      "name": "scaler",
+      "path": "models/splits/split_3_fraud_viz_stability_test/borrower_segmentation/scaler.pkl",
+      "kind": "preprocessor"
+    },
+    {
+      "name": "dbscan",
+      "path": "models/splits/split_3_fraud_viz_stability_test/borrower_segmentation/dbscan.pkl",
+      "kind": "model"
+    },
+    {
+      "name": "agglomerative",
+      "path": "models/splits/split_3_fraud_viz_stability_test/borrower_segmentation/agglomerative.pkl",
+      "kind": "model"
+    }
+  ],
+  "metrics": {
+    "dbscan": {
+      "silhouette_score": null
+    },
+    "agglomerative": {
+      "silhouette_score": 0.12299430430980154
+    }
+  },
+  "sample_rows": 2000,
+  "visualization_dir": "/Users/mac/Documents/credit-score-predictor/models/borrower_segmentation/visualizations",
+  "visualizations": {
+    "kmeans_pca_clusters": null,
+    "kmeans_cluster_sizes": null
+  }
+}

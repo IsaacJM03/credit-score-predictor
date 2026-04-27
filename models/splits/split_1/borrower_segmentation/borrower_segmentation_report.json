@@ -1,0 +1,42 @@
+{
+  "dataset_path": "/Users/mac/Documents/credit-score-predictor/results/synthetic/dataset_5m/synthetic_dataset_5000000.csv",
+  "feature_count": 13,
+  "features": [
+    "Age",
+    "Monthly_Income",
+    "Credit_Score",
+    "Loan_Amount_Requested",
+    "Existing_Debts",
+    "Num_Previous_Loans",
+    "Payment_History_Encoded",
+    "Employment_Status_Encoded",
+    "Debt_to_Income_Ratio",
+    "Loan_to_Income_Ratio",
+    "Repayment_Consistency",
+    "Application_Velocity",
+    "Credit_Utilization_Score"
+  ],
+  "artifacts": [
+    {
+      "name": "scaler",
+      "path": "models/splits/split_1/borrower_segmentation/scaler.pkl",
+      "kind": "preprocessor"
+    },
+    {
+      "name": "kmeans",
+      "path": "models/splits/split_1/borrower_segmentation/kmeans.pkl",
+      "kind": "model"
+    }
+  ],
+  "metrics": {
+    "kmeans": {
+      "silhouette_score": 0.18191516211826664
+    }
+  },
+  "sample_rows": 200000,
+  "visualization_dir": "/Users/mac/Documents/credit-score-predictor/models/borrower_segmentation/visualizations",
+  "visualizations": {
+    "kmeans_pca_clusters": "/Users/mac/Documents/credit-score-predictor/models/borrower_segmentation/visualizations/kmeans_pca_clusters.png",
+    "kmeans_cluster_sizes": "/Users/mac/Documents/credit-score-predictor/models/borrower_segmentation/visualizations/kmeans_cluster_sizes.png"
+  }
+}

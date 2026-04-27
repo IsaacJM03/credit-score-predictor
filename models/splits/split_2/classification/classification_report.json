@@ -1,0 +1,59 @@
+{
+  "dataset_path": "/Users/mac/Documents/credit-score-predictor/results/synthetic/dataset_5m/synthetic_dataset_5000000.csv",
+  "feature_count": 13,
+  "features": [
+    "Age",
+    "Monthly_Income",
+    "Credit_Score",
+    "Loan_Amount_Requested",
+    "Existing_Debts",
+    "Num_Previous_Loans",
+    "Payment_History_Encoded",
+    "Employment_Status_Encoded",
+    "Debt_to_Income_Ratio",
+    "Loan_to_Income_Ratio",
+    "Repayment_Consistency",
+    "Application_Velocity",
+    "Credit_Utilization_Score"
+  ],
+  "artifacts": [],
+  "metrics": {
+    "stacked_ensemble": {
+      "roc_auc": 0.8602874705619542,
+      "f1": 0.8729051374104442,
+      "accuracy": 0.797325
+    },
+    "dnn": {
+      "roc_auc": 0.8949500344904606,
+      "f1": 0.9472623295535897,
+      "accuracy": 0.906075
+    }
+  },
+  "classification_report": {
+    "0": {
+      "precision": 0.3758164480199397,
+      "recall": 0.7466178377741098,
+      "f1-score": 0.49996916055017576,
+      "support": 135712.0
+    },
+    "1": {
+      "precision": 0.9529194796731048,
+      "recall": 0.8052871265133844,
+      "f1-score": 0.8729051374104442,
+      "support": 864288.0
+    },
+    "accuracy": 0.797325,
+    "macro avg": {
+      "precision": 0.6643679638465222,
+      "recall": 0.7759524821437471,
+      "f1-score": 0.6864371489803099,
+      "support": 1000000.0
+    },
+    "weighted avg": {
+      "precision": 0.8745996730413904,
+      "recall": 0.797325,
+      "f1-score": 0.8222932501187834,
+      "support": 1000000.0
+    }
+  }
+}

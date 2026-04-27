@@ -1,0 +1,44 @@
+{
+  "dataset_path": "/Users/mac/Documents/credit-score-predictor/results/synthetic/dataset_5m/synthetic_dataset_5000000.csv",
+  "feature_count": 13,
+  "features": [
+    "Age",
+    "Monthly_Income",
+    "Credit_Score",
+    "Loan_Amount_Requested",
+    "Existing_Debts",
+    "Num_Previous_Loans",
+    "Payment_History_Encoded",
+    "Employment_Status_Encoded",
+    "Debt_to_Income_Ratio",
+    "Loan_to_Income_Ratio",
+    "Repayment_Consistency",
+    "Application_Velocity",
+    "Credit_Utilization_Score"
+  ],
+  "artifacts": [
+    {
+      "name": "scaler",
+      "path": "models/post_loan_monitoring/scaler.pkl",
+      "kind": "preprocessor"
+    },
+    {
+      "name": "lstm",
+      "path": "models/post_loan_monitoring/lstm_state.pt",
+      "kind": "model"
+    }
+  ],
+  "metrics": {
+    "lstm": {
+      "roc_auc": 0.7445338375192814,
+      "f1": 0.939388154238417,
+      "accuracy": 0.885704
+    }
+  },
+  "visualizations": {
+    "lstm": "/Users/mac/Documents/credit-score-predictor/models/post_loan_monitoring/visualizations/lstm_roc_pr.png",
+    "lstm_loss": "/Users/mac/Documents/credit-score-predictor/models/post_loan_monitoring/visualizations/lstm_training_loss.png",
+    "lstm_score_dist": "/Users/mac/Documents/credit-score-predictor/models/post_loan_monitoring/visualizations/lstm_score_distribution.png"
+  },
+  "visualization_dir": "/Users/mac/Documents/credit-score-predictor/models/post_loan_monitoring/visualizations"
+}

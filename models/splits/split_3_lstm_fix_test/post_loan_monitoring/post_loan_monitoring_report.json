@@ -1,0 +1,81 @@
+{
+  "dataset_path": "results/synthetic/smoke_cli_2000_v2/synthetic_2000.csv",
+  "feature_count": 13,
+  "features": [
+    "Age",
+    "Monthly_Income",
+    "Credit_Score",
+    "Loan_Amount_Requested",
+    "Existing_Debts",
+    "Num_Previous_Loans",
+    "Payment_History_Encoded",
+    "Employment_Status_Encoded",
+    "Debt_to_Income_Ratio",
+    "Loan_to_Income_Ratio",
+    "Repayment_Consistency",
+    "Application_Velocity",
+    "Credit_Utilization_Score"
+  ],
+  "artifacts": [
+    {
+      "name": "scaler",
+      "path": "models/splits/split_3_lstm_fix_test/post_loan_monitoring/scaler.pkl",
+      "kind": "preprocessor"
+    },
+    {
+      "name": "weighted_soft_voting",
+      "path": "models/splits/split_3_lstm_fix_test/post_loan_monitoring/weighted_soft_voting.pkl",
+      "kind": "model"
+    },
+    {
+      "name": "lstm",
+      "path": "models/splits/split_3_lstm_fix_test/post_loan_monitoring/lstm_state.pt",
+      "kind": "model"
+    }
+  ],
+  "metrics": {
+    "weighted_soft_voting": {
+      "roc_auc": 0.9977859068155563,
+      "f1": 0.9863945578231292,
+      "accuracy": 0.98
+    },
+    "lstm": {
+      "roc_auc": 0.4456103195995379,
+      "f1": 0.8472622478386167,
+      "accuracy": 0.735
+    }
+  },
+  "classification_report": {
+    "0": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1-score": 0.0,
+      "support": 106.0
+    },
+    "1": {
+      "precision": 0.735,
+      "recall": 1.0,
+      "f1-score": 0.8472622478386167,
+      "support": 294.0
+    },
+    "accuracy": 0.735,
+    "macro avg": {
+      "precision": 0.3675,
+      "recall": 0.5,
+      "f1-score": 0.42363112391930835,
+      "support": 400.0
+    },
+    "weighted avg": {
+      "precision": 0.540225,
+      "recall": 0.735,
+      "f1-score": 0.6227377521613833,
+      "support": 400.0
+    }
+  },
+  "visualizations": {
+    "weighted_soft_voting": "/Users/mac/Documents/credit-score-predictor/models/post_loan_monitoring/visualizations/weighted_soft_voting_roc_pr.png",
+    "lstm": "/Users/mac/Documents/credit-score-predictor/models/post_loan_monitoring/visualizations/lstm_roc_pr.png",
+    "lstm_loss": "/Users/mac/Documents/credit-score-predictor/models/post_loan_monitoring/visualizations/lstm_training_loss.png"
+  },
+  "visualization_dir": "/Users/mac/Documents/credit-score-predictor/models/post_loan_monitoring/visualizations"
+}

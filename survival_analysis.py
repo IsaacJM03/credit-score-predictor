@@ -92,26 +92,41 @@ def run(
     artifact_paths: List[TopicArtifact] = []
     metrics = {}
     curves = {}
+    skipped_kaplan_meier = False
 
     if "kaplan_meier" in selected:
         km_path = output_dir / "kaplan_meier_curve.png"
-        log_message("survival", "Generating Kaplan-Meier curve")
-        curves["kaplan_meier"] = _save_km_plot(frame, km_path)
+        if km_path.exists():
+            log_message("survival", "Skipping model (artifact exists): kaplan_meier")
+            curves["kaplan_meier"] = str(km_path)
+            skipped_kaplan_meier = True
+        else:
+            log_message("survival", "Generating Kaplan-Meier curve")
+            curves["kaplan_meier"] = _save_km_plot(frame, km_path)
         artifact_paths.append(TopicArtifact(name="kaplan_meier_curve", path=str(km_path), kind="plot"))
+        if skipped_kaplan_meier:
+            metrics["kaplan_meier"] = {"status": "skipped_existing_artifact"}
 
     if "cox_ph" in selected and HAS_LIFELINES:
-        start = time.perf_counter()
-        log_message("survival", "Training model: cox_ph")
-        cox = CoxPHFitter()
-        cox.fit(frame[feature_names + [DURATION_COLUMN, TARGET_COLUMN]], duration_col=DURATION_COLUMN, event_col=TARGET_COLUMN)
-        save_joblib_artifact(cox, output_dir / "cox_ph.pkl")
-        artifact_paths.append(TopicArtifact(name="cox_ph", path=str(output_dir / "cox_ph.pkl"), kind="model"))
-        metrics["cox_ph"] = {
-            "partial_log_likelihood": float(getattr(cox, "log_likelihood_", np.nan)),
-            "concordance_index": float(getattr(cox, "concordance_index_", np.nan)),
-        }
-        cox_plot = _save_cox_coefficients(cox, viz_dir / "cox_ph_coefficients.png")
-        log_message("survival", f"Completed cox_ph in {elapsed_seconds(start):.1f}s | concordance={metrics['cox_ph']['concordance_index']}")
+        cox_artifact = output_dir / "cox_ph.pkl"
+        if cox_artifact.exists():
+            log_message("survival", "Skipping model (artifact exists): cox_ph")
+            artifact_paths.append(TopicArtifact(name="cox_ph", path=str(cox_artifact), kind="model"))
+            metrics["cox_ph"] = {"status": "skipped_existing_artifact"}
+            cox_plot = str(viz_dir / "cox_ph_coefficients.png") if (viz_dir / "cox_ph_coefficients.png").exists() else None
+        else:
+            start = time.perf_counter()
+            log_message("survival", "Training model: cox_ph")
+            cox = CoxPHFitter()
+            cox.fit(frame[feature_names + [DURATION_COLUMN, TARGET_COLUMN]], duration_col=DURATION_COLUMN, event_col=TARGET_COLUMN)
+            save_joblib_artifact(cox, cox_artifact)
+            artifact_paths.append(TopicArtifact(name="cox_ph", path=str(cox_artifact), kind="model"))
+            metrics["cox_ph"] = {
+                "partial_log_likelihood": float(getattr(cox, "log_likelihood_", np.nan)),
+                "concordance_index": float(getattr(cox, "concordance_index_", np.nan)),
+            }
+            cox_plot = _save_cox_coefficients(cox, viz_dir / "cox_ph_coefficients.png")
+            log_message("survival", f"Completed cox_ph in {elapsed_seconds(start):.1f}s | concordance={metrics['cox_ph']['concordance_index']}")
     elif "cox_ph" in selected:
         metrics["cox_ph"] = {"status": "lifelines unavailable"}
         cox_plot = None

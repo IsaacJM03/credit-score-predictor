@@ -8,7 +8,7 @@ import time
 from borrower_segmentation import run as run_segmentation
 from classification import run as run_classification
 from fraud_detection import run as run_fraud
-from post_loan_monitoring import run as run_monitoring
+from post_loan_monitoring import run as run_monitoring, run_lstm as run_post_loan_lstm
 from survival_analysis import run as run_survival
 
 from pipeline_utils import DEFAULT_DATASET_PATH, elapsed_seconds, log_message, save_json
@@ -32,7 +32,12 @@ def run(dataset_path: Path | str = DEFAULT_DATASET_PATH, output_root: Path | str
 
     step_start = time.perf_counter()
     log_message("suite", "Running post-loan monitoring training")
-    summary["post_loan_monitoring"] = run_monitoring(dataset_path=dataset_path, output_root=output_root / "post_loan_monitoring", seed=seed)
+    summary["post_loan_monitoring"] = run_monitoring(
+        dataset_path=dataset_path,
+        output_root=output_root / "post_loan_monitoring",
+        seed=seed,
+        selected_models=["random_forest", "xgboost", "lightgbm", "weighted_soft_voting"],
+    )
     log_message("suite", f"Completed post-loan monitoring in {elapsed_seconds(step_start):.1f}s")
 
     step_start = time.perf_counter()
@@ -49,6 +54,15 @@ def run(dataset_path: Path | str = DEFAULT_DATASET_PATH, output_root: Path | str
     log_message("suite", "Running borrower segmentation training")
     summary["borrower_segmentation"] = run_segmentation(dataset_path=dataset_path, output_root=output_root / "borrower_segmentation", seed=seed)
     log_message("suite", f"Completed borrower segmentation in {elapsed_seconds(step_start):.1f}s")
+
+    step_start = time.perf_counter()
+    log_message("suite", "Running LSTM training last")
+    summary["post_loan_monitoring_lstm"] = run_post_loan_lstm(
+        dataset_path=dataset_path,
+        output_root=output_root / "post_loan_monitoring",
+        seed=seed,
+    )
+    log_message("suite", f"Completed LSTM training in {elapsed_seconds(step_start):.1f}s")
 
     manifest_path = output_root / "suite_manifest.json"
     save_json({"dataset_path": str(dataset_path), "topics": summary}, manifest_path)

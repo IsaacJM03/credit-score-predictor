@@ -1,0 +1,43 @@
+{
+  "dataset_path": "results/synthetic/smoke_cli_2000_v2/synthetic_2000.csv",
+  "feature_count": 13,
+  "features": [
+    "Age",
+    "Monthly_Income",
+    "Credit_Score",
+    "Loan_Amount_Requested",
+    "Existing_Debts",
+    "Num_Previous_Loans",
+    "Payment_History_Encoded",
+    "Employment_Status_Encoded",
+    "Debt_to_Income_Ratio",
+    "Loan_to_Income_Ratio",
+    "Repayment_Consistency",
+    "Application_Velocity",
+    "Credit_Utilization_Score"
+  ],
+  "artifacts": [
+    {
+      "name": "scaler",
+      "path": "models/splits/split_3_fraud_viz_stability_test/post_loan_monitoring/scaler.pkl",
+      "kind": "preprocessor"
+    },
+    {
+      "name": "lstm",
+      "path": "models/splits/split_3_fraud_viz_stability_test/post_loan_monitoring/lstm_state.pt",
+      "kind": "model"
+    }
+  ],
+  "metrics": {
+    "lstm": {
+      "roc_auc": 0.4456103195995379,
+      "f1": 0.8472622478386167,
+      "accuracy": 0.735
+    }
+  },
+  "visualizations": {
+    "lstm": "/Users/mac/Documents/credit-score-predictor/models/post_loan_monitoring/visualizations/lstm_roc_pr.png",
+    "lstm_loss": "/Users/mac/Documents/credit-score-predictor/models/post_loan_monitoring/visualizations/lstm_training_loss.png"
+  },
+  "visualization_dir": "/Users/mac/Documents/credit-score-predictor/models/post_loan_monitoring/visualizations"
+}

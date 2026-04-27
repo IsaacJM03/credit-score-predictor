@@ -1,0 +1,37 @@
+{
+  "dataset_path": "/Users/mac/Documents/credit-score-predictor/results/synthetic/dataset_5m/synthetic_dataset_5000000.csv",
+  "feature_count": 13,
+  "features": [
+    "Age",
+    "Monthly_Income",
+    "Credit_Score",
+    "Loan_Amount_Requested",
+    "Existing_Debts",
+    "Num_Previous_Loans",
+    "Payment_History_Encoded",
+    "Employment_Status_Encoded",
+    "Debt_to_Income_Ratio",
+    "Loan_to_Income_Ratio",
+    "Repayment_Consistency",
+    "Application_Velocity",
+    "Credit_Utilization_Score"
+  ],
+  "artifacts": [],
+  "metrics": {
+    "logistic_regression": {
+      "roc_auc": 0.8092659499922908,
+      "f1": 0.8513917155209947,
+      "accuracy": 0.765168
+    },
+    "random_forest": {
+      "roc_auc": 0.9026682423174694,
+      "f1": 0.9012928466579453,
+      "accuracy": 0.839286
+    },
+    "xgboost": {
+      "roc_auc": 0.828365848198134,
+      "f1": 0.9387107091523542,
+      "accuracy": 0.888665
+    }
+  }
+}

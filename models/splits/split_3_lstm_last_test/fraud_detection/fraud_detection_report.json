@@ -1,0 +1,52 @@
+{
+  "dataset_path": "results/synthetic/smoke_cli_2000_v2/synthetic_2000.csv",
+  "feature_count": 13,
+  "features": [
+    "Age",
+    "Monthly_Income",
+    "Credit_Score",
+    "Loan_Amount_Requested",
+    "Existing_Debts",
+    "Num_Previous_Loans",
+    "Payment_History_Encoded",
+    "Employment_Status_Encoded",
+    "Debt_to_Income_Ratio",
+    "Loan_to_Income_Ratio",
+    "Repayment_Consistency",
+    "Application_Velocity",
+    "Credit_Utilization_Score"
+  ],
+  "artifacts": [
+    {
+      "name": "scaler",
+      "path": "models/splits/split_3_lstm_last_test/fraud_detection/scaler.pkl",
+      "kind": "preprocessor"
+    },
+    {
+      "name": "one_class_svm",
+      "path": "models/splits/split_3_lstm_last_test/fraud_detection/one_class_svm.pkl",
+      "kind": "model"
+    },
+    {
+      "name": "autoencoder",
+      "path": "models/splits/split_3_lstm_last_test/fraud_detection/autoencoder_state.pt",
+      "kind": "model"
+    }
+  ],
+  "metrics": {
+    "one_class_svm": {
+      "score_mean": -1.6861118587306367,
+      "score_std": 1.2466878524514193
+    },
+    "autoencoder": {
+      "reconstruction_error_mean": 0.991125249038083,
+      "reconstruction_error_std": 0.7642008047936651
+    }
+  },
+  "visualization_dir": "/Users/mac/Documents/credit-score-predictor/models/fraud_detection/visualizations",
+  "visualizations": {
+    "anomaly_pca_projection": null,
+    "iforest_score_distribution": null,
+    "autoencoder_reconstruction_error": "/Users/mac/Documents/credit-score-predictor/models/fraud_detection/visualizations/autoencoder_reconstruction_error.png"
+  }
+}

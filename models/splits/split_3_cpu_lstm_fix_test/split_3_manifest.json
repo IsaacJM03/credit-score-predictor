@@ -1,0 +1,189 @@
+{
+  "split": "split_3",
+  "dataset_path": "results/synthetic/smoke_cli_2000_v2/synthetic_2000.csv",
+  "topics": {
+    "post_loan_monitoring": {
+      "dataset_path": "results/synthetic/smoke_cli_2000_v2/synthetic_2000.csv",
+      "feature_count": 13,
+      "features": [
+        "Age",
+        "Monthly_Income",
+        "Credit_Score",
+        "Loan_Amount_Requested",
+        "Existing_Debts",
+        "Num_Previous_Loans",
+        "Payment_History_Encoded",
+        "Employment_Status_Encoded",
+        "Debt_to_Income_Ratio",
+        "Loan_to_Income_Ratio",
+        "Repayment_Consistency",
+        "Application_Velocity",
+        "Credit_Utilization_Score"
+      ],
+      "artifacts": [
+        {
+          "name": "scaler",
+          "path": "models/splits/split_3_cpu_lstm_fix_test/post_loan_monitoring/scaler.pkl",
+          "kind": "preprocessor"
+        },
+        {
+          "name": "weighted_soft_voting",
+          "path": "models/splits/split_3_cpu_lstm_fix_test/post_loan_monitoring/weighted_soft_voting.pkl",
+          "kind": "model"
+        },
+        {
+          "name": "lstm",
+          "path": "models/splits/split_3_cpu_lstm_fix_test/post_loan_monitoring/lstm_state.pt",
+          "kind": "model"
+        }
+      ],
+      "metrics": {
+        "weighted_soft_voting": {
+          "roc_auc": 0.9977859068155563,
+          "f1": 0.9863945578231292,
+          "accuracy": 0.98
+        },
+        "lstm": {
+          "roc_auc": 0.4456103195995379,
+          "f1": 0.8472622478386167,
+          "accuracy": 0.735
+        }
+      },
+      "classification_report": {
+        "0": {
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1-score": 0.0,
+          "support": 106.0
+        },
+        "1": {
+          "precision": 0.735,
+          "recall": 1.0,
+          "f1-score": 0.8472622478386167,
+          "support": 294.0
+        },
+        "accuracy": 0.735,
+        "macro avg": {
+          "precision": 0.3675,
+          "recall": 0.5,
+          "f1-score": 0.42363112391930835,
+          "support": 400.0
+        },
+        "weighted avg": {
+          "precision": 0.540225,
+          "recall": 0.735,
+          "f1-score": 0.6227377521613833,
+          "support": 400.0
+        }
+      },
+      "visualizations": {
+        "weighted_soft_voting": "/Users/mac/Documents/credit-score-predictor/models/post_loan_monitoring/visualizations/weighted_soft_voting_roc_pr.png",
+        "lstm": "/Users/mac/Documents/credit-score-predictor/models/post_loan_monitoring/visualizations/lstm_roc_pr.png",
+        "lstm_loss": "/Users/mac/Documents/credit-score-predictor/models/post_loan_monitoring/visualizations/lstm_training_loss.png"
+      },
+      "visualization_dir": "/Users/mac/Documents/credit-score-predictor/models/post_loan_monitoring/visualizations"
+    },
+    "fraud_detection": {
+      "dataset_path": "results/synthetic/smoke_cli_2000_v2/synthetic_2000.csv",
+      "feature_count": 13,
+      "features": [
+        "Age",
+        "Monthly_Income",
+        "Credit_Score",
+        "Loan_Amount_Requested",
+        "Existing_Debts",
+        "Num_Previous_Loans",
+        "Payment_History_Encoded",
+        "Employment_Status_Encoded",
+        "Debt_to_Income_Ratio",
+        "Loan_to_Income_Ratio",
+        "Repayment_Consistency",
+        "Application_Velocity",
+        "Credit_Utilization_Score"
+      ],
+      "artifacts": [
+        {
+          "name": "scaler",
+          "path": "models/splits/split_3_cpu_lstm_fix_test/fraud_detection/scaler.pkl",
+          "kind": "preprocessor"
+        },
+        {
+          "name": "one_class_svm",
+          "path": "models/splits/split_3_cpu_lstm_fix_test/fraud_detection/one_class_svm.pkl",
+          "kind": "model"
+        },
+        {
+          "name": "autoencoder",
+          "path": "models/splits/split_3_cpu_lstm_fix_test/fraud_detection/autoencoder_state.pt",
+          "kind": "model"
+        }
+      ],
+      "metrics": {
+        "one_class_svm": {
+          "score_mean": -1.6861118587306367,
+          "score_std": 1.2466878524514193
+        },
+        "autoencoder": {
+          "reconstruction_error_mean": 0.991125249038083,
+          "reconstruction_error_std": 0.7642008047936651
+        }
+      },
+      "visualization_dir": "/Users/mac/Documents/credit-score-predictor/models/fraud_detection/visualizations",
+      "visualizations": {
+        "anomaly_pca_projection": null,
+        "iforest_score_distribution": null,
+        "autoencoder_reconstruction_error": "/Users/mac/Documents/credit-score-predictor/models/fraud_detection/visualizations/autoencoder_reconstruction_error.png"
+      }
+    },
+    "borrower_segmentation": {
+      "dataset_path": "results/synthetic/smoke_cli_2000_v2/synthetic_2000.csv",
+      "feature_count": 13,
+      "features": [
+        "Age",
+        "Monthly_Income",
+        "Credit_Score",
+        "Loan_Amount_Requested",
+        "Existing_Debts",
+        "Num_Previous_Loans",
+        "Payment_History_Encoded",
+        "Employment_Status_Encoded",
+        "Debt_to_Income_Ratio",
+        "Loan_to_Income_Ratio",
+        "Repayment_Consistency",
+        "Application_Velocity",
+        "Credit_Utilization_Score"
+      ],
+      "artifacts": [
+        {
+          "name": "scaler",
+          "path": "models/splits/split_3_cpu_lstm_fix_test/borrower_segmentation/scaler.pkl",
+          "kind": "preprocessor"
+        },
+        {
+          "name": "dbscan",
+          "path": "models/splits/split_3_cpu_lstm_fix_test/borrower_segmentation/dbscan.pkl",
+          "kind": "model"
+        },
+        {
+          "name": "agglomerative",
+          "path": "models/splits/split_3_cpu_lstm_fix_test/borrower_segmentation/agglomerative.pkl",
+          "kind": "model"
+        }
+      ],
+      "metrics": {
+        "dbscan": {
+          "silhouette_score": null
+        },
+        "agglomerative": {
+          "silhouette_score": 0.12299430430980154
+        }
+      },
+      "sample_rows": 2000,
+      "visualization_dir": "/Users/mac/Documents/credit-score-predictor/models/borrower_segmentation/visualizations",
+      "visualizations": {
+        "kmeans_pca_clusters": null,
+        "kmeans_cluster_sizes": null
+      }
+    }
+  }
+}

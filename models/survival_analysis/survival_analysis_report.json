@@ -1,0 +1,49 @@
+{
+  "dataset_path": "/Users/mac/Documents/credit-score-predictor/results/synthetic/dataset_5m/synthetic_dataset_5000000.csv",
+  "feature_count": 13,
+  "features": [
+    "Age",
+    "Monthly_Income",
+    "Credit_Score",
+    "Loan_Amount_Requested",
+    "Existing_Debts",
+    "Num_Previous_Loans",
+    "Payment_History_Encoded",
+    "Employment_Status_Encoded",
+    "Debt_to_Income_Ratio",
+    "Loan_to_Income_Ratio",
+    "Repayment_Consistency",
+    "Application_Velocity",
+    "Credit_Utilization_Score"
+  ],
+  "artifacts": [
+    {
+      "name": "kaplan_meier_curve",
+      "path": "models/survival_analysis/kaplan_meier_curve.png",
+      "kind": "plot"
+    },
+    {
+      "name": "cox_ph",
+      "path": "models/survival_analysis/cox_ph.pkl",
+      "kind": "model"
+    }
+  ],
+  "metrics": {
+    "kaplan_meier": {
+      "status": "skipped_existing_artifact"
+    },
+    "cox_ph": {
+      "status": "skipped_existing_artifact"
+    }
+  },
+  "duration_column": "Duration_Months",
+  "event_column": "Repayment_Status",
+  "curves": {
+    "kaplan_meier": "models/survival_analysis/kaplan_meier_curve.png"
+  },
+  "visualization_dir": "/Users/mac/Documents/credit-score-predictor/models/survival_analysis/visualizations",
+  "visualizations": {
+    "kaplan_meier": "models/survival_analysis/kaplan_meier_curve.png",
+    "cox_ph_coefficients": "/Users/mac/Documents/credit-score-predictor/models/survival_analysis/visualizations/cox_ph_coefficients.png"
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "dataset_path": "/Users/mac/Documents/credit-score-predictor/results/synthetic/dataset_5m/synthetic_dataset_5000000.csv",
+  "feature_count": 13,
+  "features": [
+    "Age",
+    "Monthly_Income",
+    "Credit_Score",
+    "Loan_Amount_Requested",
+    "Existing_Debts",
+    "Num_Previous_Loans",
+    "Payment_History_Encoded",
+    "Employment_Status_Encoded",
+    "Debt_to_Income_Ratio",
+    "Loan_to_Income_Ratio",
+    "Repayment_Consistency",
+    "Application_Velocity",
+    "Credit_Utilization_Score"
+  ],
+  "artifacts": [
+    {
+      "name": "logistic_regression",
+      "path": "models/classification/logistic_regression.pkl",
+      "kind": "model"
+    },
+    {
+      "name": "random_forest",
+      "path": "models/classification/random_forest.pkl",
+      "kind": "model"
+    },
+    {
+      "name": "xgboost",
+      "path": "models/classification/xgboost.pkl",
+      "kind": "model"
+    },
+    {
+      "name": "stacked_ensemble",
+      "path": "models/classification/stacked_ensemble.pkl",
+      "kind": "model"
+    },
+    {
+      "name": "dnn",
+      "path": "models/classification/dnn.pkl",
+      "kind": "model"
+    }
+  ],
+  "metrics": {
+    "logistic_regression": {
+      "status": "skipped_existing_artifact"
+    },
+    "random_forest": {
+      "status": "skipped_existing_artifact"
+    },
+    "xgboost": {
+      "status": "skipped_existing_artifact"
+    },
+    "stacked_ensemble": {
+      "status": "skipped_existing_artifact"
+    },
+    "dnn": {
+      "status": "skipped_existing_artifact"
+    }
+  }
+}

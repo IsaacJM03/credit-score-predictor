@@ -63,47 +63,65 @@ def run(
     agglomerative_sample = sample[: min(len(sample), 50_000)]
 
     if "kmeans" in selected:
-        kmeans = MiniBatchKMeans(n_clusters=5, random_state=seed, batch_size=4096)
-        start = time.perf_counter()
-        log_message("segmentation", "Training model: kmeans")
-        kmeans.fit(sample)
-        k_labels = kmeans.predict(sample)
-        log_message("segmentation", f"Completed kmeans in {elapsed_seconds(start):.1f}s")
-        save_joblib_artifact(kmeans, output_dir / "kmeans.pkl")
+        kmeans_artifact = output_dir / "kmeans.pkl"
+        if kmeans_artifact.exists():
+            log_message("segmentation", "Skipping model (artifact exists): kmeans")
+        else:
+            kmeans = MiniBatchKMeans(n_clusters=5, random_state=seed, batch_size=4096)
+            start = time.perf_counter()
+            log_message("segmentation", "Training model: kmeans")
+            kmeans.fit(sample)
+            k_labels = kmeans.predict(sample)
+            log_message("segmentation", f"Completed kmeans in {elapsed_seconds(start):.1f}s")
+            save_joblib_artifact(kmeans, kmeans_artifact)
 
     if "dbscan" in selected:
-        dbscan = DBSCAN(eps=1.25, min_samples=25, n_jobs=-1)
-        start = time.perf_counter()
-        log_message("segmentation", "Training model: dbscan")
-        dbscan_labels = dbscan.fit_predict(sample)
-        log_message("segmentation", f"Completed dbscan in {elapsed_seconds(start):.1f}s")
-        save_joblib_artifact(dbscan, output_dir / "dbscan.pkl")
+        dbscan_artifact = output_dir / "dbscan.pkl"
+        if dbscan_artifact.exists():
+            log_message("segmentation", "Skipping model (artifact exists): dbscan")
+        else:
+            dbscan = DBSCAN(eps=1.25, min_samples=25, n_jobs=-1)
+            start = time.perf_counter()
+            log_message("segmentation", "Training model: dbscan")
+            dbscan_labels = dbscan.fit_predict(sample)
+            log_message("segmentation", f"Completed dbscan in {elapsed_seconds(start):.1f}s")
+            save_joblib_artifact(dbscan, dbscan_artifact)
 
     if "agglomerative" in selected:
-        agglomerative = AgglomerativeClustering(n_clusters=5)
-        start = time.perf_counter()
-        log_message("segmentation", "Training model: agglomerative")
-        agglomerative_labels = agglomerative.fit_predict(agglomerative_sample)
-        log_message("segmentation", f"Completed agglomerative in {elapsed_seconds(start):.1f}s")
-        save_joblib_artifact(agglomerative, output_dir / "agglomerative.pkl")
+        agglomerative_artifact = output_dir / "agglomerative.pkl"
+        if agglomerative_artifact.exists():
+            log_message("segmentation", "Skipping model (artifact exists): agglomerative")
+        else:
+            agglomerative = AgglomerativeClustering(n_clusters=5)
+            start = time.perf_counter()
+            log_message("segmentation", "Training model: agglomerative")
+            agglomerative_labels = agglomerative.fit_predict(agglomerative_sample)
+            log_message("segmentation", f"Completed agglomerative in {elapsed_seconds(start):.1f}s")
+            save_joblib_artifact(agglomerative, agglomerative_artifact)
 
     artifact_paths: List[TopicArtifact] = [
         TopicArtifact(name="scaler", path=str(output_dir / "scaler.pkl"), kind="preprocessor"),
     ]
-    if "kmeans" in selected:
+    if "kmeans" in selected and (output_dir / "kmeans.pkl").exists():
         artifact_paths.append(TopicArtifact(name="kmeans", path=str(output_dir / "kmeans.pkl"), kind="model"))
-    if "dbscan" in selected:
+    if "dbscan" in selected and (output_dir / "dbscan.pkl").exists():
         artifact_paths.append(TopicArtifact(name="dbscan", path=str(output_dir / "dbscan.pkl"), kind="model"))
-    if "agglomerative" in selected:
+    if "agglomerative" in selected and (output_dir / "agglomerative.pkl").exists():
         artifact_paths.append(TopicArtifact(name="agglomerative", path=str(output_dir / "agglomerative.pkl"), kind="model"))
 
     metrics: Dict[str, Dict[str, Optional[float]]] = {}
+    if "kmeans" in selected and k_labels is None:
+        metrics["kmeans"] = {"status": "skipped_existing_artifact"}
     if k_labels is not None:
         metrics["kmeans"] = {"silhouette_score": float(silhouette_score(sample, k_labels))}
+    if "dbscan" in selected and dbscan_labels is None:
+        metrics["dbscan"] = {"status": "skipped_existing_artifact"}
     if dbscan_labels is not None:
         metrics["dbscan"] = {
             "silhouette_score": float(silhouette_score(sample, dbscan_labels)) if len(set(dbscan_labels)) > 1 else None
         }
+    if "agglomerative" in selected and agglomerative_labels is None:
+        metrics["agglomerative"] = {"status": "skipped_existing_artifact"}
     if agglomerative_labels is not None:
         metrics["agglomerative"] = {
             "silhouette_score": float(silhouette_score(agglomerative_sample, agglomerative_labels))

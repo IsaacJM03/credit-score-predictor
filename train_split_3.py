@@ -5,7 +5,7 @@ from pathlib import Path
 
 from borrower_segmentation import run as run_segmentation
 from fraud_detection import run as run_fraud
-from post_loan_monitoring import run as run_post_loan
+from post_loan_monitoring import run as run_post_loan, run_lstm as run_post_loan_lstm
 from pipeline_utils import DEFAULT_DATASET_PATH, log_message, save_json
 
 
@@ -26,7 +26,7 @@ def main(argv=None):
             dataset_path=dataset_path,
             output_root=output_root / "post_loan_monitoring",
             seed=args.seed,
-            selected_models=["weighted_soft_voting", "lstm"],
+            selected_models=["weighted_soft_voting"],
         ),
         "fraud_detection": run_fraud(
             dataset_path=dataset_path,
@@ -41,6 +41,13 @@ def main(argv=None):
             selected_models=["dbscan", "agglomerative"],
         ),
     }
+
+    log_message("split_3", "Running LSTM training last")
+    result["post_loan_monitoring_lstm"] = run_post_loan_lstm(
+        dataset_path=dataset_path,
+        output_root=output_root / "post_loan_monitoring",
+        seed=args.seed,
+    )
 
     manifest_path = output_root / "split_3_manifest.json"
     save_json({"split": "split_3", "dataset_path": str(dataset_path), "topics": result}, manifest_path)

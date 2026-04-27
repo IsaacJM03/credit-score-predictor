@@ -1,0 +1,62 @@
+{
+  "dataset_path": "/Users/mac/Documents/credit-score-predictor/results/synthetic/dataset_5m/synthetic_dataset_5000000.csv",
+  "feature_count": 13,
+  "features": [
+    "Age",
+    "Monthly_Income",
+    "Credit_Score",
+    "Loan_Amount_Requested",
+    "Existing_Debts",
+    "Num_Previous_Loans",
+    "Payment_History_Encoded",
+    "Employment_Status_Encoded",
+    "Debt_to_Income_Ratio",
+    "Loan_to_Income_Ratio",
+    "Repayment_Consistency",
+    "Application_Velocity",
+    "Credit_Utilization_Score"
+  ],
+  "artifacts": [
+    {
+      "name": "scaler",
+      "path": "models/post_loan_monitoring/scaler.pkl",
+      "kind": "preprocessor"
+    },
+    {
+      "name": "random_forest",
+      "path": "models/post_loan_monitoring/random_forest.pkl",
+      "kind": "model"
+    },
+    {
+      "name": "xgboost",
+      "path": "models/post_loan_monitoring/xgboost.pkl",
+      "kind": "model"
+    },
+    {
+      "name": "lightgbm",
+      "path": "models/post_loan_monitoring/lightgbm.pkl",
+      "kind": "model"
+    },
+    {
+      "name": "weighted_soft_voting",
+      "path": "models/post_loan_monitoring/weighted_soft_voting.pkl",
+      "kind": "model"
+    }
+  ],
+  "metrics": {
+    "random_forest": {
+      "status": "skipped_existing_artifact"
+    },
+    "xgboost": {
+      "status": "skipped_existing_artifact"
+    },
+    "lightgbm": {
+      "status": "skipped_existing_artifact"
+    },
+    "weighted_soft_voting": {
+      "status": "skipped_existing_artifact"
+    }
+  },
+  "visualizations": {},
+  "visualization_dir": "/Users/mac/Documents/credit-score-predictor/models/post_loan_monitoring/visualizations"
+}
