@@ -106,8 +106,23 @@ def _build_keras_model(scaler, mlp):
 
 def _export_tflite(keras_model, out_path: Path):
     import tensorflow as tf
+
+    # TF 2.16+ serialises FULLY_CONNECTED as op-version 12, which older TFLite
+    # runtimes (bundled by tflite_flutter < 0.11.0) cannot load.
+    # Fix A (preferred): upgrade tflite_flutter to ^0.11.0 in pubspec.yaml.
+    # Fix B (fallback):  use tensorflow==2.15.* for this export step.
+    tf_ver = tuple(int(x) for x in tf.__version__.split(".")[:2])
+    if tf_ver >= (2, 16):
+        print(
+            f"[warn] TensorFlow {tf.__version__} generates FULLY_CONNECTED op-v12.\n"
+            "       Upgrade tflite_flutter to ^0.11.0 in pubspec.yaml, or re-export\n"
+            "       with tensorflow==2.15.* to stay compatible with older runtimes."
+        )
+
     converter = tf.lite.TFLiteConverter.from_keras_model(keras_model)
-    converter.optimizations = [tf.lite.Optimize.DEFAULT]
+    # Keep float32 only; avoid dynamic-range quantization which can push newer op paths.
+    converter.target_spec.supported_ops = [tf.lite.OpsSet.TFLITE_BUILTINS]
+    converter.target_spec.supported_types = [tf.float32]
     tflite_model = converter.convert()
     out_path.write_bytes(tflite_model)
     size_kb = len(tflite_model) / 1024
